@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do List</title>
+    <style>
+        /* General Body Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 360px;
+        }  
+
+        #inputField {
+            width: calc(100% - 70px);
+            height: 46px;
+            border: 1px solid #e00d0d;
+            outline: none;
+            font-size: 18px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        #addToDo {
+            height: 50px;
+            width: 50px;
+            background-color: #e00d0d;
+            color: white;
+            font-size: 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #addToDo:hover {
+            background-color: #c00a0a;
+        }
+
+        .to-dos {
+            margin-top: 25px;
+        }
+
+        .paragraph-styling {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            transition: background-color 0.3s ease;
+        }
+
+        .paragraph-styling:hover {
+            background-color: #e6e6e6;
+        }
+
+        .paragraph-styling.line-through {
+            text-decoration: line-through;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>To Do List</h1>
+        <input id="inputField" type="text" placeholder="Enter a task...">
+        <button id="addToDo">+</button>
+        <div class="to-dos" id="toDoContainer"></div>
+    </div>
+
+    <script>
+        let addToDoButton = document.getElementById('addToDo');
+        let toDoContainer = document.getElementById('toDoContainer');
+        let inputField = document.getElementById('inputField');
+
+        addToDoButton.addEventListener('click', function(){
+            if(inputField.value === "") return;
+
+            var paragraph = document.createElement('p');
+            paragraph.classList.add('paragraph-styling');
+            paragraph.innerText = inputField.value; 
+            toDoContainer.appendChild(paragraph);
+            inputField.value = "";
+
+            paragraph.addEventListener('click', function(){
+                paragraph.classList.toggle('line-through');
+            });
+
+            paragraph.addEventListener('dblclick', function(){
+                toDoContainer.removeChild(paragraph);
+            });
+        });
+
+        inputField.addEventListener('keypress', function(event){
+            if(event.key === 'Enter') {
+                addToDoButton.click();
+            }
+        });
+    </script>
+</body>
+</html>
