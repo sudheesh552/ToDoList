@@ -93,33 +93,60 @@
     </div>
 
     <script>
-        let addToDoButton = document.getElementById('addToDo');
-        let toDoContainer = document.getElementById('toDoContainer');
-        let inputField = document.getElementById('inputField');
+        const addToDoButton = document.getElementById('addToDo');
+        const toDoContainer = document.getElementById('toDoContainer');
+        const inputField = document.getElementById('inputField');
 
-        addToDoButton.addEventListener('click', function(){
-            if(inputField.value === "") return;
+        // Load tasks from localStorage
+        const loadTasks = () => {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            tasks.forEach(task => createTaskElement(task.text, task.completed));
+        };
 
-            var paragraph = document.createElement('p');
+        const createTaskElement = (taskText, completed = false) => {
+            const paragraph = document.createElement('p');
             paragraph.classList.add('paragraph-styling');
-            paragraph.innerText = inputField.value; 
+            paragraph.innerText = taskText; 
+            if (completed) {
+                paragraph.classList.add('line-through');
+            }
             toDoContainer.appendChild(paragraph);
-            inputField.value = "";
 
             paragraph.addEventListener('click', function(){
                 paragraph.classList.toggle('line-through');
+                saveTasks(); // Save state after toggling
             });
 
             paragraph.addEventListener('dblclick', function(){
                 toDoContainer.removeChild(paragraph);
+                saveTasks(); // Save state after deleting
             });
+        };
+
+        const saveTasks = () => {
+            const tasks = Array.from(toDoContainer.children).map(item => ({
+                text: item.innerText,
+                completed: item.classList.contains('line-through')
+            }));
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        };
+
+        addToDoButton.addEventListener('click', function(){
+            if (inputField.value === "") return;
+
+            createTaskElement(inputField.value);
+            inputField.value = "";
+            saveTasks(); // Save new task
         });
 
         inputField.addEventListener('keypress', function(event){
-            if(event.key === 'Enter') {
+            if (event.key === 'Enter') {
                 addToDoButton.click();
             }
         });
+
+        // Load tasks on page load
+        loadTasks();
     </script>
 </body>
 </html>
